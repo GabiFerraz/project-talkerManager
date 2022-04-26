@@ -1,5 +1,7 @@
 const express = require('express');
 
+const crypto = require('crypto');
+
 const router = express.Router();
 
 const readTalker = require('./utils/readTalker');
@@ -24,6 +26,22 @@ router.get('/talker/:id', async (req, res, next) => {
     return next({ status: 404, message: 'Pessoa palestrante não encontrada' });
   }
   return res.status(200).json(talkerPerson);
+});
+
+router.post('/login', (req, res, next) => {
+  try {
+    const { email, password } = req.body;
+
+    if ([email, password].includes(undefined)) {
+      return next({ status: 401, message: 'Unauthorized' });
+    }
+
+    const token = crypto.randomBytes(8).toString('hex'); // hexadecimal, transformando o número em string
+
+    return res.status(200).json({ token });
+  } catch (erro) {
+    next({ message: 'Internal error' });
+  }
 });
 
 module.exports = router;
