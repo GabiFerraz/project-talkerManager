@@ -1,18 +1,28 @@
 const express = require('express');
 
-const crypto = require('crypto');
-
 const router = express.Router();
 
 const readTalker = require('./utils/readTalker');
 
-const emailValidation = require('./utils/emailValidation');
+const emailValidation = require('./middlewares/emailValidation');
 
-const passwordValidation = require('./utils/passwordValidation');
+const passwordValidation = require('./middlewares/passwordValidation');
 
-// const userEmail = require('./utils/userEmail');
+const userToken = require('./utils/userToken');
 
-// const userPassword = require('./utils/userPassword');
+const tokenValidation = require('./middlewares/tokenValidation');
+
+const writeTalker = require('./utils/writeTalker');
+
+const nameValidation = require('./middlewares/nameValidation');
+
+const ageValidation = require('./middlewares/ageValidation');
+
+const watchedAtValidation = require('./middlewares/watchedAtValidation');
+
+const rateValidation = require('./middlewares/rateValidation');
+
+const talkValidation = require('./middlewares/talkValidation');
 
 router.get('/talker', async (_req, res, next) => {
   try {
@@ -37,8 +47,21 @@ router.get('/talker/:id', async (req, res, next) => {
 });
 
 router.post('/login', emailValidation, passwordValidation, (_req, res) => {
-  const token = crypto.randomBytes(8).toString('hex'); // hexadecimal, transformando o número em string
+  const token = userToken();
   return res.status(200).json({ token });
+});
+
+router.post('/talker', tokenValidation, nameValidation, ageValidation,
+talkValidation, watchedAtValidation, rateValidation, async (req, res) => {
+  const data = await readTalker();
+  const person = req.body;
+
+  person.id = data.length + 1;
+
+  data.push(person);
+  await writeTalker(data);
+
+  return res.status(201).json(person);
 });
 
 module.exports = router;

@@ -1,4 +1,4 @@
-const userPassword = require('./userPassword');
+const userPassword = require('../utils/userPassword');
 
 const passwordValidation = (req, _res, next) => {
   const { password } = req.body;

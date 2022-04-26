@@ -1,4 +1,4 @@
-const userEmail = require('./userEmail');
+const userEmail = require('../utils/userEmail');
 
 const emailValidation = (req, _res, next) => {
   const { email } = req.body;

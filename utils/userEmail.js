@@ -7,3 +7,5 @@ const userEmail = Joi.object({
 });
 
 module.exports = userEmail;
+
+// Documentação do Joi: https://joi.dev/api/?v=17.6.0
