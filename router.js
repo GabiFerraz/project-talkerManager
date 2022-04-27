@@ -84,4 +84,17 @@ talkValidation, watchedAtValidation, rateValidation, async (req, res) => {
   return res.status(200).json(talkerPerson); // estou retornando só as informações da pessoa editada.
 });
 
+router.delete('/talker/:id', tokenValidation, async (req, res) => {
+  const { id } = req.params;
+
+  const data = await readTalker();
+
+  const talkerPerson = data.find((person) => person.id === Number(id));
+  const newData = data.filter((person) => person.id !== talkerPerson.id);
+  
+  await writeTalker(newData);
+
+  return res.status(204).json(newData);
+});
+
 module.exports = router;
