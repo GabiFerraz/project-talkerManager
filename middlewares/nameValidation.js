@@ -5,7 +5,7 @@ const nameValidation = (req, _res, next) => {
 
   const { error } = userName.validate({ name });
   
-  if (!name) {
+  if (name === undefined) {
     return next({ status: 400, message: 'O campo "name" é obrigatório' });
   }
 

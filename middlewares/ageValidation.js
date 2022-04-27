@@ -5,7 +5,7 @@ const ageValidation = (req, _res, next) => {
 
   const { error } = userAge.validate({ age });
   
-  if (!age) {
+  if (age === undefined) {
     return next({ status: 400, message: 'O campo "age" é obrigatório' });
   }
 

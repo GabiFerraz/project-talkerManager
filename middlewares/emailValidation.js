@@ -5,7 +5,7 @@ const emailValidation = (req, _res, next) => {
 
   const { error } = userEmail.validate({ email });
   
-  if (!email) {
+  if (email === undefined) {
     return next({ status: 400, message: 'O campo "email" é obrigatório' });
   }
 

@@ -24,6 +24,21 @@ const rateValidation = require('./middlewares/rateValidation');
 
 const talkValidation = require('./middlewares/talkValidation');
 
+router.get('/talker/search', tokenValidation, async (req, res) => {
+  const { q } = req.query;
+
+  const data = await readTalker();
+
+  const talkerPerson = data.filter((person) => person.name.includes(q));
+  // se no data tiver o parâmetro colocado na url(o que vem depois do q=) ele retorna o array com as informações daquela pessoa, se não tiver, ele vai retornar um array vazio, já que o filter retorna um array.
+
+  if (talkerPerson === undefined || talkerPerson === '') { // se não for informado(undefinded) ou estiver vazio
+    return res.status(200).json(data); // retorna todos os palestrantes
+  }
+
+  return res.status(200).json(talkerPerson); // vai retornar a pessoa pesquisada ou o array vazio
+});
+
 router.get('/talker', async (_req, res, next) => {
   try {
     const data = await readTalker();
@@ -40,7 +55,7 @@ router.get('/talker/:id', async (req, res, next) => {
   const data = await readTalker();
   const talkerPerson = data.find((person) => person.id === Number(id)); 
   
-  if (!talkerPerson) {
+  if (talkerPerson === undefined) {
     return next({ status: 404, message: 'Pessoa palestrante não encontrada' });
   }
   return res.status(200).json(talkerPerson);
@@ -90,7 +105,7 @@ router.delete('/talker/:id', tokenValidation, async (req, res) => {
   const data = await readTalker();
 
   const talkerPerson = data.find((person) => person.id === Number(id));
-  const newData = data.filter((person) => person.id !== talkerPerson.id);
+  const newData = data.filter((person) => person.id !== talkerPerson.id); // mandando retornar todo mundo, menos a pessoa do id passado que é quem eu quero deletar.
   
   await writeTalker(newData);
 

@@ -5,7 +5,7 @@ const passwordValidation = (req, _res, next) => {
 
   const { error } = userPassword.validate({ password });
 
-  if (!password) {
+  if (password === undefined) {
     return next({ status: 400, message: 'O campo "password" é obrigatório' });
   }
   if (error) {

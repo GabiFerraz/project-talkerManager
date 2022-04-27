@@ -1,7 +1,7 @@
 const tokenValidation = (req, _res, next) => {
   const { authorization } = req.headers;
 
-  if (!authorization) {
+  if (authorization === undefined) {
     return next({ status: 401, message: 'Token não encontrado' });
   }
 
