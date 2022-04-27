@@ -64,4 +64,24 @@ talkValidation, watchedAtValidation, rateValidation, async (req, res) => {
   return res.status(201).json(person);
 });
 
+router.put('/talker/:id', tokenValidation, nameValidation, ageValidation,
+talkValidation, watchedAtValidation, rateValidation, async (req, res) => {
+  const { id } = req.params;
+
+  const data = await readTalker();
+
+  const talkerPerson = data.find((person) => person.id === Number(id));
+  const indexPerson = data.findIndex((person) => person.id === talkerPerson.id); // encontrando o index, a posição da pessoa do id que eu quero editar está.
+  // findIndex https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Global_Objects/Array/findIndex#descri%C3%A7%C3%A3o
+  
+  const { name, age, talk } = req.body; // aqui eu estou pegando do body as novas informações que vão substituir as antigas que o front está enviando.
+  talkerPerson.name = name;
+  talkerPerson.age = age;
+  talkerPerson.talk = talk;
+  data[indexPerson] = talkerPerson; // estou atualizando no data as info da pessoa do id que eu editei.
+  await writeTalker(data); // estou reescrevendo o data com as novas informações.
+  
+  return res.status(200).json(talkerPerson); // estou retornando só as informações da pessoa editada.
+});
+
 module.exports = router;
