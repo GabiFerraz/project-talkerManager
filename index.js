@@ -1,10 +1,14 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+
 const router = require('./router');
+
 const handleError = require('./middlewares/handleError');
 
 const app = express();
+
 app.use(bodyParser.json());
+
 app.use(router);
 
 const HTTP_OK_STATUS = 200;
